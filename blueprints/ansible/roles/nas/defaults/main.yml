@@ -1,0 +1,7 @@
+---
+nas_packages:
+  - nfs-kernel-server
+  - samba
+nas_exports:
+  - path: /srv/data
+    clients: 192.168.0.0/24(rw,sync,no_subtree_check)

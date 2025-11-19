@@ -1,0 +1,24 @@
+---
+- name: Update package cache
+  opkg:
+    update_cache: true
+
+- name: Install base packages
+  opkg:
+    name: "{{ openwrt_packages }}"
+    state: present
+
+- name: Configure firewall rules
+  community.general.uci:
+    command: set
+    config: firewall
+    section: "rule.@rule[-1]"
+    value:
+      name: "{{ item.name }}"
+      src: "{{ item.src }}"
+      dest: lan
+      dest_port: "{{ item.dest_port }}"
+      proto: tcp
+      target: ACCEPT
+  loop: "{{ openwrt_firewall_rules }}"
+  notify: reload firewall

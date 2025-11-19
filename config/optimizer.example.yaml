@@ -1,0 +1,21 @@
+# Optimizer behavior configuration
+power_profiles:
+  default:
+    base_idle_watts: 65
+    watts_per_cpu_core: 12
+    watts_per_gb_ram: 0.9
+  low_power_node:
+    base_idle_watts: 25
+    watts_per_cpu_core: 7
+    watts_per_gb_ram: 0.4
+scenarios:
+  consolidate-low-util:
+    cpu_threshold: 0.25
+    ram_threshold: 0.30
+    max_node_utilization: 0.70
+  rightsize:
+    cpu_headroom: 0.15
+    ram_headroom: 0.20
+reporting:
+  markdown_template: default
+  enable_ai: false

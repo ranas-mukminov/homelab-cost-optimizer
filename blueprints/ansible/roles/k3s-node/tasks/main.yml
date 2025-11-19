@@ -1,0 +1,16 @@
+---
+- name: Download k3s installer
+  get_url:
+    url: https://get.k3s.io
+    dest: /tmp/k3s.sh
+    mode: "0755"
+
+- name: Install k3s
+  command: >-
+    /tmp/k3s.sh
+    INSTALL_K3S_VERSION={{ k3s_version }}
+    K3S_URL={{ k3s_server_url }}
+    K3S_TOKEN={{ k3s_token }}
+    {{ 'server' if k3s_role == 'server' else 'agent' }}
+  args:
+    creates: /usr/local/bin/k3s

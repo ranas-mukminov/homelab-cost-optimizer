@@ -1,0 +1,24 @@
+---
+- name: Harden edge firewall
+  hosts: firewalls
+  become: true
+  roles:
+    - pfsense
+
+- name: Prepare office NAS and file services
+  hosts: file_servers
+  become: true
+  roles:
+    - nas
+
+- name: Bootstrap office k3s cluster
+  hosts: k3s_controller:k3s_workers
+  become: true
+  roles:
+    - k3s-node
+
+- name: Prepare CI/docker hosts
+  hosts: docker_hosts
+  become: true
+  roles:
+    - docker-host

@@ -1,0 +1,8 @@
+---
+openwrt_packages:
+  - tcpdump
+  - wireguard-tools
+openwrt_firewall_rules:
+  - name: Allow-Home-SSH
+    src: lan
+    dest_port: 22

@@ -1,0 +1,5 @@
+---
+k3s_version: v1.29.2+k3s1
+k3s_server_url: https://control-plane:6443
+k3s_token: changeme
+k3s_role: agent

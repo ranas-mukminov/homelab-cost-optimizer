@@ -1,0 +1,13 @@
+---
+- name: Install NAS packages
+  apt:
+    name: "{{ nas_packages }}"
+    state: present
+    update_cache: true
+
+- name: Configure /etc/exports
+  template:
+    src: exports.j2
+    dest: /etc/exports
+    mode: "0644"
+  notify: reload nfs

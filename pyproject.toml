@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=67", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "homelab-cost-optimizer"
+version = "0.1.0"
+description = "IaC blueprints plus a cost and power optimization toolkit for homelabs and SMB stacks."
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Ranas Mukminov", email = "hello@run-as-daemon.ru"}
+]
+requires-python = ">=3.10"
+dependencies = [
+  "typer>=0.9",
+  "rich>=13.0",
+  "PyYAML>=6.0",
+  "requests>=2.31"
+]
+
+[project.optional-dependencies]
+ai = ["openai>=1.0"]
+dev = [
+  "pytest>=7.4",
+  "pytest-cov>=4.1",
+  "ruff>=0.4",
+  "black>=24.2",
+  "isort>=5.13",
+  "yamllint>=1.32",
+  "ansible-lint>=6.22",
+  "bandit>=1.7",
+  "pip-audit>=2.7"
+]
+
+[project.urls]
+Homepage = "https://run-as-daemon.ru"
+Repository = "https://github.com/ranas-mukminov/homelab-cost-optimizer"
+Issues = "https://github.com/ranas-mukminov/homelab-cost-optimizer/issues"
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "B"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra --strict-markers --disable-warnings"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["optimizer/homelab_cost_optimizer", "blueprints/ai", "ai_providers"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

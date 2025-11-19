@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.env
+.env.*
+.cache/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Terraform / IaC
+**/.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Ansible
+*.retry
+
+# k3d
+kubeconfig-*.yaml
+
+# Tooling outputs
+report.md
+*.log
+*.tmp
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Local configs
+config/electricity.yaml
+config/optimizer.yaml

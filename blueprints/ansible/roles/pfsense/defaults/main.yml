@@ -1,0 +1,10 @@
+---
+pfsense_api_host: https://pfsense.local
+pfsense_api_key: changeme
+pfsense_api_secret: changeme
+pfsense_rules:
+  - name: Allow-VPN
+    interface: lan
+    protocol: udp
+    source: any
+    destination_port: 1194

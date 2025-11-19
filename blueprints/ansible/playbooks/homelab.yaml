@@ -1,0 +1,37 @@
+---
+- name: Configure homelab core services
+  hosts: firewalls
+  become: true
+  roles:
+    - role: openwrt
+      when: inventory_hostname == 'openwrt'
+    - role: pfsense
+      when: inventory_hostname == 'pfsense'
+
+- name: Configure NAS
+  hosts: nas
+  become: true
+  roles:
+    - nas
+
+- name: Configure k3s controllers
+  hosts: k3s_controller
+  become: true
+  roles:
+    - role: k3s-node
+      vars:
+        k3s_role: server
+
+- name: Configure k3s workers
+  hosts: k3s_workers
+  become: true
+  roles:
+    - role: k3s-node
+      vars:
+        k3s_role: agent
+
+- name: Configure Docker hosts
+  hosts: docker_hosts
+  become: true
+  roles:
+    - docker-host

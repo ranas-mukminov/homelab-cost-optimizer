@@ -1,0 +1,23 @@
+---
+- name: Install Docker engine
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - docker.io
+    state: present
+    update_cache: true
+
+- name: Ensure docker group exists
+  group:
+    name: docker
+    state: present
+
+- name: Add users to docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  loop: "{{ docker_users }}"

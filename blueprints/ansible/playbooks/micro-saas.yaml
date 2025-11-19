@@ -1,0 +1,12 @@
+---
+- name: Prepare micro-SaaS docker hosts
+  hosts: docker_hosts
+  become: true
+  roles:
+    - docker-host
+
+- name: Configure backup share
+  hosts: nas
+  become: true
+  roles:
+    - nas
