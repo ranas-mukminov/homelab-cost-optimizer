@@ -1,0 +1,5 @@
+---
+exclude_paths:
+  - playbooks/homelab.yaml
+  - playbooks/micro-saas.yaml
+  - playbooks/smb-office.yaml

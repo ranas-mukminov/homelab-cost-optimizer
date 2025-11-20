@@ -9,10 +9,16 @@ from homelab_cost_optimizer.reporters.markdown_reporter import generate_markdown
 
 
 def _inventory() -> Inventory:
-    profile = PowerProfile(name="default", base_idle_watts=60, watts_per_cpu_core=10, watts_per_gb_ram=1)
+    profile = PowerProfile(
+        name="default", base_idle_watts=60, watts_per_cpu_core=10, watts_per_gb_ram=1
+    )
     nodes = [
-        Node(name="node1", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=profile),
-        Node(name="node2", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=profile),
+        Node(
+            name="node1", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=profile
+        ),
+        Node(
+            name="node2", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=profile
+        ),
     ]
     workloads = [
         Workload(
@@ -52,7 +58,9 @@ def test_full_workflow(tmp_path):
     optimizer_conf = load_optimizer_config(optimizer_file)
     power_report = build_power_report(inventory)
     cost_report = estimate_cost(power_report, electricity)
-    consolidator = HeuristicConsolidator(optimizer_conf.get_scenario("consolidate-low-util"), electricity)
+    consolidator = HeuristicConsolidator(
+        optimizer_conf.get_scenario("consolidate-low-util"), electricity
+    )
     plan = consolidator.build_plan(inventory)
     markdown = generate_markdown_report(inventory, power_report, cost_report, plan)
     assert "Nodes to power down" in markdown

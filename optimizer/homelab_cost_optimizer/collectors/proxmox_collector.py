@@ -35,7 +35,9 @@ class ProxmoxCollector(BaseCollector):
 
     def _get(self, path: str) -> Dict:
         url = f"{self.base_url}{path}"
-        response = requests.get(url, headers=self._headers(), verify=self.verify_ssl, timeout=self.timeout)
+        response = requests.get(
+            url, headers=self._headers(), verify=self.verify_ssl, timeout=self.timeout
+        )
         response.raise_for_status()
         return response.json()
 
@@ -58,7 +60,10 @@ class ProxmoxCollector(BaseCollector):
                     total_cpu=total_cpu,
                     total_memory_gb=total_memory_gb,
                     power_profile=self.power_profile,
-                    metadata={"status": item.get("status", "unknown"), "type": item.get("type", "node")},
+                    metadata={
+                        "status": item.get("status", "unknown"),
+                        "type": item.get("type", "node"),
+                    },
                 )
             )
         return nodes
@@ -74,7 +79,8 @@ class ProxmoxCollector(BaseCollector):
                     vcpus=float(item.get("maxcpu", 0)),
                     memory_gb=total_memory_gb,
                     utilization_cpu=float(item.get("cpu", 0)),
-                    utilization_memory=float(item.get("mem", 0)) / max(float(item.get("maxmem", 1)), 1),
+                    utilization_memory=float(item.get("mem", 0))
+                    / max(float(item.get("maxmem", 1)), 1),
                     node=item.get("node", ""),
                     uptime_hours=float(item.get("uptime", 0)) / 3600,
                     labels={"vmid": str(item.get("vmid"))},

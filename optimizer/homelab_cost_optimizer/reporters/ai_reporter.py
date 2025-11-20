@@ -46,5 +46,6 @@ def generate_ai_report(
             "AI report unavailable due to error: "
             + str(exc)
             + "\nFallback summary: consolidate nodes "
-            + ", ".join(payload["plan"]["nodes_powered_down"]) or "no consolidation"
+            + ", ".join(payload["plan"]["nodes_powered_down"])
+            or "no consolidation"
         )

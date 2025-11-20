@@ -17,7 +17,9 @@ def generate_markdown_report(
     lines.append("# Homelab Cost Optimizer Summary")
     lines.append("")
     lines.append(f"**Nodes**: {len(inventory.nodes)} | **Workloads**: {len(inventory.workloads)}")
-    lines.append(f"**Power draw**: {power_report.total_watts} W | **Monthly cost**: {cost_report.total_monthly_cost} {cost_report.currency}")
+    lines.append(
+        f"**Power draw**: {power_report.total_watts} W | **Monthly cost**: {cost_report.total_monthly_cost} {cost_report.currency}"
+    )
     lines.append("")
     lines.append("## Per-node energy & cost")
     lines.append("| Node | Watts | Monthly cost |")
@@ -30,9 +32,7 @@ def generate_markdown_report(
     if plan:
         lines.append("## Consolidation scenario")
         nodes_line = f"**Nodes to power down**: {', '.join(plan.powered_down_nodes) or 'none'}"
-        savings_line = (
-            f"**Estimated savings**: {plan.estimated_watts_saved} W / {plan.estimated_monthly_savings} {cost_report.currency} per month"
-        )
+        savings_line = f"**Estimated savings**: {plan.estimated_watts_saved} W / {plan.estimated_monthly_savings} {cost_report.currency} per month"
         lines.append(nodes_line)
         lines.append(savings_line)
         if plan.moves:

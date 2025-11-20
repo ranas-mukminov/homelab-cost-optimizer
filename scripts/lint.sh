@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 
-ruff .
+ruff check .
 black --check optimizer ai_providers tests
 isort --check-only optimizer ai_providers tests
 
@@ -24,7 +24,7 @@ else
 fi
 
 if command -v ansible-lint >/dev/null 2>&1; then
-  ansible-lint blueprints/ansible
+  (cd blueprints/ansible && ansible-lint .)
 else
   echo "ansible-lint not installed; skipping" >&2
 fi

@@ -26,7 +26,11 @@ def estimate_node_power(node: Node, workloads: List[Workload]) -> NodePowerUsage
     total_cpu = sum(w.vcpus * max(w.utilization_cpu, 0.1) for w in node_workloads)
     total_ram = sum(w.memory_gb * max(w.utilization_memory, 0.1) for w in node_workloads)
     profile = node.power_profile
-    watts = profile.base_idle_watts + profile.watts_per_cpu_core * total_cpu + profile.watts_per_gb_ram * total_ram
+    watts = (
+        profile.base_idle_watts
+        + profile.watts_per_cpu_core * total_cpu
+        + profile.watts_per_gb_ram * total_ram
+    )
     return NodePowerUsage(node=node, watts=round(watts, 2))
 
 

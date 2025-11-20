@@ -31,7 +31,9 @@ def generate_text_report(
     if plan:
         lines.append("Consolidation scenario:")
         lines.append(f"- Nodes to power down: {', '.join(plan.powered_down_nodes) or 'none'}")
-        lines.append(f"- Estimated savings: {plan.estimated_watts_saved} W (~{plan.estimated_monthly_savings} {cost_report.currency}/month)")
+        lines.append(
+            f"- Estimated savings: {plan.estimated_watts_saved} W (~{plan.estimated_monthly_savings} {cost_report.currency}/month)"
+        )
         if plan.moves:
             lines.append("Suggested moves:")
             for move in plan.moves:

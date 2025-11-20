@@ -8,7 +8,9 @@ from homelab_cost_optimizer.collectors.libvirt_collector import LibvirtCollector
 from homelab_cost_optimizer.collectors.proxmox_collector import ProxmoxCollector
 from homelab_cost_optimizer.models import PowerProfile
 
-PROFILE = PowerProfile(name="default", base_idle_watts=60, watts_per_cpu_core=10, watts_per_gb_ram=1)
+PROFILE = PowerProfile(
+    name="default", base_idle_watts=60, watts_per_cpu_core=10, watts_per_gb_ram=1
+)
 
 
 def test_proxmox_collector_parses(monkeypatch):
@@ -86,9 +88,7 @@ def test_k8s_collector_parses(monkeypatch):
                 "metadata": {"name": "pod1", "labels": {}},
                 "spec": {
                     "nodeName": "node1",
-                    "containers": [
-                        {"resources": {"requests": {"cpu": "250m", "memory": "256Mi"}}}
-                    ],
+                    "containers": [{"resources": {"requests": {"cpu": "250m", "memory": "256Mi"}}}],
                 },
             }
         ]

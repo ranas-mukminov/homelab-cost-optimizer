@@ -1,5 +1,5 @@
 ---
-- name: reload nfs
-  service:
+- name: Reload nfs
+  ansible.builtin.service:
     name: nfs-kernel-server
     state: reloaded

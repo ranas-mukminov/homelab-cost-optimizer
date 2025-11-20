@@ -2,13 +2,19 @@ from homelab_cost_optimizer.config import ElectricityConfig, ScenarioConfig
 from homelab_cost_optimizer.consolidators.heuristic_consolidator import HeuristicConsolidator
 from homelab_cost_optimizer.models import Inventory, Node, PowerProfile, Workload
 
-PROFILE = PowerProfile(name="default", base_idle_watts=50, watts_per_cpu_core=10, watts_per_gb_ram=1)
+PROFILE = PowerProfile(
+    name="default", base_idle_watts=50, watts_per_cpu_core=10, watts_per_gb_ram=1
+)
 
 
 def build_inventory() -> Inventory:
     nodes = [
-        Node(name="node1", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=PROFILE),
-        Node(name="node2", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=PROFILE),
+        Node(
+            name="node1", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=PROFILE
+        ),
+        Node(
+            name="node2", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=PROFILE
+        ),
     ]
     workloads = [
         Workload(

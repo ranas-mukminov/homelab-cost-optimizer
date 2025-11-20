@@ -1,16 +1,16 @@
 ---
 - name: Validate API credentials
-  uri:
+  ansible.builtin.uri:
     url: "{{ pfsense_api_host }}/api/v1/system/status"
     method: GET
     headers:
       Authorization: "Bearer {{ pfsense_api_key }}:{{ pfsense_api_secret }}"
     validate_certs: false
-  register: _status
-  failed_when: _status.status not in [200, 204]
+  register: pfsense_status
+  failed_when: pfsense_status.status not in [200, 204]
 
 - name: Configure firewall rules
-  uri:
+  ansible.builtin.uri:
     url: "{{ pfsense_api_host }}/api/v1/firewall/rule"
     method: POST
     headers:

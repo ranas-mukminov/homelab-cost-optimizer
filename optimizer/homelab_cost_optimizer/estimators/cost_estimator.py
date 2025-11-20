@@ -24,7 +24,9 @@ class CostReport:
         return round(sum(item.monthly_cost for item in self.per_node), 2)
 
 
-def estimate_cost(power_report: PowerReport, config: ElectricityConfig, monthly_hours: float = 730) -> CostReport:
+def estimate_cost(
+    power_report: PowerReport, config: ElectricityConfig, monthly_hours: float = 730
+) -> CostReport:
     price = config.effective_price()
     per_node = []
     for entry in power_report.per_node:
