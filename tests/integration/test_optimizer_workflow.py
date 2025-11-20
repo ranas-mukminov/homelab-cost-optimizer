@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 from homelab_cost_optimizer.config import load_electricity_config, load_optimizer_config
 from homelab_cost_optimizer.consolidators.heuristic_consolidator import HeuristicConsolidator
 from homelab_cost_optimizer.estimators.cost_estimator import estimate_cost

@@ -1,6 +1,6 @@
+from homelab_cost_optimizer.config import ElectricityConfig
 from homelab_cost_optimizer.estimators.cost_estimator import estimate_cost
 from homelab_cost_optimizer.estimators.power_estimator import build_power_report
-from homelab_cost_optimizer.config import ElectricityConfig
 from homelab_cost_optimizer.models import Inventory, Node, PowerProfile, Workload
 
 

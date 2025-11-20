@@ -22,7 +22,7 @@ def generate_markdown_report(
     lines.append("## Per-node energy & cost")
     lines.append("| Node | Watts | Monthly cost |")
     lines.append("| --- | ---: | ---: |")
-    for power_entry, cost_entry in zip(power_report.per_node, cost_report.per_node):
+    for power_entry, cost_entry in zip(power_report.per_node, cost_report.per_node, strict=True):
         lines.append(
             f"| {power_entry.node.name} | {power_entry.watts} | {cost_entry.monthly_cost} {cost_report.currency} |"
         )

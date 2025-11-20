@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 from homelab_cost_optimizer.collectors.docker_collector import DockerCollector
 from homelab_cost_optimizer.collectors.k8s_collector import KubernetesCollector
 from homelab_cost_optimizer.collectors.libvirt_collector import LibvirtCollector
 from homelab_cost_optimizer.collectors.proxmox_collector import ProxmoxCollector
 from homelab_cost_optimizer.models import PowerProfile
-
 
 PROFILE = PowerProfile(name="default", base_idle_watts=60, watts_per_cpu_core=10, watts_per_gb_ram=1)
 

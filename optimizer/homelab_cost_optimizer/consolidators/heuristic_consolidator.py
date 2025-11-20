@@ -4,7 +4,14 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 from ..config import ElectricityConfig, ScenarioConfig
-from ..models import ConsolidationMove, ConsolidationPlan, Inventory, Node, Workload, group_workloads_by_node
+from ..models import (
+    ConsolidationMove,
+    ConsolidationPlan,
+    Inventory,
+    Node,
+    Workload,
+    group_workloads_by_node,
+)
 
 
 @dataclass

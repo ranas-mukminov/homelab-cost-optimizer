@@ -3,11 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from typer.testing import CliRunner
-
 from homelab_cost_optimizer.cli import app
 from homelab_cost_optimizer.models import Inventory, Node, PowerProfile, Workload
-
+from typer.testing import CliRunner
 
 runner = CliRunner()
 

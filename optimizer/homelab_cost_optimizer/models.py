@@ -65,6 +65,9 @@ class Inventory:
     def from_dict(cls, data: Dict[str, Any]) -> "Inventory":  # noqa: D401
         nodes = []
         for item in data.get("nodes", []):
+            if "name" not in item:
+                raise ValueError("Node missing required field 'name'")
+            
             profile_data = item.get("power_profile", {})
             profile = PowerProfile(
                 name=profile_data.get("name", "default"),
@@ -82,20 +85,25 @@ class Inventory:
                     metadata=item.get("metadata", {}),
                 )
             )
-        workloads = [
-            Workload(
-                name=item["name"],
-                workload_type=item.get("workload_type", "vm"),
-                vcpus=float(item.get("vcpus", 0)),
-                memory_gb=float(item.get("memory_gb", 0)),
-                utilization_cpu=float(item.get("utilization_cpu", 0)),
-                utilization_memory=float(item.get("utilization_memory", 0)),
-                node=item.get("node", ""),
-                uptime_hours=float(item.get("uptime_hours", 0)),
-                labels=item.get("labels", {}),
+        
+        workloads = []
+        for item in data.get("workloads", []):
+            if "name" not in item:
+                raise ValueError("Workload missing required field 'name'")
+            
+            workloads.append(
+                Workload(
+                    name=item["name"],
+                    workload_type=item.get("workload_type", "vm"),
+                    vcpus=float(item.get("vcpus", 0)),
+                    memory_gb=float(item.get("memory_gb", 0)),
+                    utilization_cpu=float(item.get("utilization_cpu", 0)),
+                    utilization_memory=float(item.get("utilization_memory", 0)),
+                    node=item.get("node", ""),
+                    uptime_hours=float(item.get("uptime_hours", 0)),
+                    labels=item.get("labels", {}),
+                )
             )
-            for item in data.get("workloads", [])
-        ]
         return cls(nodes=nodes, workloads=workloads)
 
 

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import List
 
-from ..consolidators.heuristic_consolidator import HeuristicConsolidator
 from ..estimators.cost_estimator import CostReport
 from ..estimators.power_estimator import PowerReport
 from ..models import ConsolidationPlan, Inventory
@@ -24,7 +23,7 @@ def generate_text_report(
     lines.append(f"Monthly cost: {cost_report.total_monthly_cost} {cost_report.currency}")
     lines.append("")
     lines.append("Per-node breakdown:")
-    for power_entry, cost_entry in zip(power_report.per_node, cost_report.per_node):
+    for power_entry, cost_entry in zip(power_report.per_node, cost_report.per_node, strict=True):
         lines.append(
             f"- {power_entry.node.name}: {power_entry.watts} W / {cost_entry.monthly_cost} {cost_report.currency}/month"
         )

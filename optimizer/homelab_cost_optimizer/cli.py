@@ -1,8 +1,9 @@
+
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
 from rich.console import Console
@@ -28,17 +29,17 @@ def _load_inventory(path: Path) -> Inventory:
 
 @app.command()
 def collect(
-    source: str = typer.Option(..., help="Source platform: proxmox|libvirt|docker|k8s"),
-    output: Path = typer.Option(..., help="Destination JSON file"),
-    optimizer_config: Path = typer.Option(Path("config/optimizer.example.yaml"), help="Optimizer config"),
-    power_profile_name: str = typer.Option("default", help="Power profile to use for nodes"),
-    base_url: Optional[str] = typer.Option(None, help="Proxmox API URL"),
-    token_id: Optional[str] = typer.Option(None, help="Proxmox API token ID"),
-    token_secret: Optional[str] = typer.Option(None, help="Proxmox API token secret"),
-    verify_ssl: bool = typer.Option(True, help="Verify TLS certificates"),
-    uri: str = typer.Option("qemu:///system", help="Libvirt connection URI"),
-    host_name: str = typer.Option("edge-host", help="Local host name for libvirt/docker"),
-    context: Optional[str] = typer.Option(None, help="Kubernetes context name"),
+    source: Annotated[str, typer.Option(help="Source platform: proxmox|libvirt|docker|k8s")],
+    output: Annotated[Path, typer.Option(help="Destination JSON file")],
+    optimizer_config: Annotated[Path, typer.Option(help="Optimizer config")] = Path("config/optimizer.example.yaml"),
+    power_profile_name: Annotated[str, typer.Option(help="Power profile to use for nodes")] = "default",
+    base_url: Annotated[Optional[str], typer.Option(help="Proxmox API URL")] = None,
+    token_id: Annotated[Optional[str], typer.Option(help="Proxmox API token ID")] = None,
+    token_secret: Annotated[Optional[str], typer.Option(help="Proxmox API token secret")] = None,
+    verify_ssl: Annotated[bool, typer.Option(help="Verify TLS certificates")] = True,
+    uri: Annotated[str, typer.Option(help="Libvirt connection URI")] = "qemu:///system",
+    host_name: Annotated[str, typer.Option(help="Local host name for libvirt/docker")] = "edge-host",
+    context: Annotated[Optional[str], typer.Option(help="Kubernetes context name")] = None,
 ) -> None:
     optimizer_conf = load_optimizer_config(optimizer_config)
     power_profile = optimizer_conf.get_power_profile(power_profile_name)
@@ -65,12 +66,12 @@ def collect(
 
 @app.command()
 def analyze(
-    input: Path = typer.Option(..., help="Inventory JSON from the collect step"),
-    electricity_config: Path = typer.Option(..., help="Electricity tariff configuration"),
-    optimizer_config: Path = typer.Option(Path("config/optimizer.example.yaml"), help="Optimizer config"),
-    scenario: Optional[str] = typer.Option(None, help="Scenario name to evaluate"),
-    report_format: str = typer.Option("text", help="Report style: text or markdown"),
-    output: Path = typer.Option(Path("report.txt"), help="Output file path"),
+    input: Annotated[Path, typer.Option(help="Inventory JSON from the collect step")],
+    electricity_config: Annotated[Path, typer.Option(help="Electricity tariff configuration")],
+    optimizer_config: Annotated[Path, typer.Option(help="Optimizer config")] = Path("config/optimizer.example.yaml"),
+    scenario: Annotated[Optional[str], typer.Option(help="Scenario name to evaluate")] = None,
+    report_format: Annotated[str, typer.Option(help="Report style: text or markdown")] = "text",
+    output: Annotated[Path, typer.Option(help="Output file path")] = Path("report.txt"),
 ) -> None:
     inventory = _load_inventory(input)
     electricity = load_electricity_config(electricity_config)
@@ -96,14 +97,14 @@ def analyze(
 
 @app.command()
 def suggest(
-    input: Path = typer.Option(..., help="Inventory JSON"),
-    electricity_config: Path = typer.Option(..., help="Electricity tariff file"),
-    optimizer_config: Path = typer.Option(Path("config/optimizer.example.yaml"), help="Optimizer config"),
-    scenario: str = typer.Option("consolidate-low-util", help="Scenario to run"),
-    output: Path = typer.Option(Path("suggestions.md"), help="Markdown report output"),
-    ai_report: bool = typer.Option(False, help="Generate AI report"),
-    ai_provider: str = typer.Option("mock", help="AI provider name"),
-    ai_output: Optional[Path] = typer.Option(None, help="File to store AI narrative"),
+    input: Annotated[Path, typer.Option(help="Inventory JSON")],
+    electricity_config: Annotated[Path, typer.Option(help="Electricity tariff file")],
+    optimizer_config: Annotated[Path, typer.Option(help="Optimizer config")] = Path("config/optimizer.example.yaml"),
+    scenario: Annotated[str, typer.Option(help="Scenario to run")] = "consolidate-low-util",
+    output: Annotated[Path, typer.Option(help="Markdown report output")] = Path("suggestions.md"),
+    ai_report: Annotated[bool, typer.Option(help="Generate AI report")] = False,
+    ai_provider: Annotated[str, typer.Option(help="AI provider name")] = "mock",
+    ai_output: Annotated[Optional[Path], typer.Option(help="File to store AI narrative")] = None,
 ) -> None:
     inventory = _load_inventory(input)
     electricity = load_electricity_config(electricity_config)
