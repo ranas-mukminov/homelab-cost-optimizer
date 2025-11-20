@@ -1,6 +1,6 @@
 ---
 - name: Install Docker engine
-  apt:
+  ansible.builtin.apt:
     name:
       - apt-transport-https
       - ca-certificates
@@ -11,12 +11,12 @@
     update_cache: true
 
 - name: Ensure docker group exists
-  group:
+  ansible.builtin.group:
     name: docker
     state: present
 
 - name: Add users to docker group
-  user:
+  ansible.builtin.user:
     name: "{{ item }}"
     groups: docker
     append: true

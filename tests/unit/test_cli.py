@@ -11,8 +11,12 @@ runner = CliRunner()
 
 
 def _inventory() -> Inventory:
-    profile = PowerProfile(name="default", base_idle_watts=60, watts_per_cpu_core=10, watts_per_gb_ram=1)
-    node = Node(name="node1", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=profile)
+    profile = PowerProfile(
+        name="default", base_idle_watts=60, watts_per_cpu_core=10, watts_per_gb_ram=1
+    )
+    node = Node(
+        name="node1", kind="hypervisor", total_cpu=8, total_memory_gb=32, power_profile=profile
+    )
     workload = Workload(
         name="vm1",
         workload_type="vm",

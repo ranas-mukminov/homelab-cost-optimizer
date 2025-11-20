@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import json
@@ -31,14 +30,20 @@ def _load_inventory(path: Path) -> Inventory:
 def collect(
     source: Annotated[str, typer.Option(help="Source platform: proxmox|libvirt|docker|k8s")],
     output: Annotated[Path, typer.Option(help="Destination JSON file")],
-    optimizer_config: Annotated[Path, typer.Option(help="Optimizer config")] = Path("config/optimizer.example.yaml"),
-    power_profile_name: Annotated[str, typer.Option(help="Power profile to use for nodes")] = "default",
+    optimizer_config: Annotated[Path, typer.Option(help="Optimizer config")] = Path(
+        "config/optimizer.example.yaml"
+    ),
+    power_profile_name: Annotated[
+        str, typer.Option(help="Power profile to use for nodes")
+    ] = "default",
     base_url: Annotated[Optional[str], typer.Option(help="Proxmox API URL")] = None,
     token_id: Annotated[Optional[str], typer.Option(help="Proxmox API token ID")] = None,
     token_secret: Annotated[Optional[str], typer.Option(help="Proxmox API token secret")] = None,
     verify_ssl: Annotated[bool, typer.Option(help="Verify TLS certificates")] = True,
     uri: Annotated[str, typer.Option(help="Libvirt connection URI")] = "qemu:///system",
-    host_name: Annotated[str, typer.Option(help="Local host name for libvirt/docker")] = "edge-host",
+    host_name: Annotated[
+        str, typer.Option(help="Local host name for libvirt/docker")
+    ] = "edge-host",
     context: Annotated[Optional[str], typer.Option(help="Kubernetes context name")] = None,
 ) -> None:
     optimizer_conf = load_optimizer_config(optimizer_config)
@@ -46,13 +51,17 @@ def collect(
     kwargs = {"power_profile": power_profile}
     if source == "proxmox":
         if not (base_url and token_id and token_secret):
-            raise typer.BadParameter("base_url, token_id, and token_secret are required for Proxmox")
-        kwargs.update({
-            "base_url": base_url,
-            "token_id": token_id,
-            "token_secret": token_secret,
-            "verify_ssl": verify_ssl,
-        })
+            raise typer.BadParameter(
+                "base_url, token_id, and token_secret are required for Proxmox"
+            )
+        kwargs.update(
+            {
+                "base_url": base_url,
+                "token_id": token_id,
+                "token_secret": token_secret,
+                "verify_ssl": verify_ssl,
+            }
+        )
     elif source == "libvirt":
         kwargs.update({"uri": uri, "host_name": host_name})
     elif source == "docker":
@@ -68,7 +77,9 @@ def collect(
 def analyze(
     input: Annotated[Path, typer.Option(help="Inventory JSON from the collect step")],
     electricity_config: Annotated[Path, typer.Option(help="Electricity tariff configuration")],
-    optimizer_config: Annotated[Path, typer.Option(help="Optimizer config")] = Path("config/optimizer.example.yaml"),
+    optimizer_config: Annotated[Path, typer.Option(help="Optimizer config")] = Path(
+        "config/optimizer.example.yaml"
+    ),
     scenario: Annotated[Optional[str], typer.Option(help="Scenario name to evaluate")] = None,
     report_format: Annotated[str, typer.Option(help="Report style: text or markdown")] = "text",
     output: Annotated[Path, typer.Option(help="Output file path")] = Path("report.txt"),
@@ -99,7 +110,9 @@ def analyze(
 def suggest(
     input: Annotated[Path, typer.Option(help="Inventory JSON")],
     electricity_config: Annotated[Path, typer.Option(help="Electricity tariff file")],
-    optimizer_config: Annotated[Path, typer.Option(help="Optimizer config")] = Path("config/optimizer.example.yaml"),
+    optimizer_config: Annotated[Path, typer.Option(help="Optimizer config")] = Path(
+        "config/optimizer.example.yaml"
+    ),
     scenario: Annotated[str, typer.Option(help="Scenario to run")] = "consolidate-low-util",
     output: Annotated[Path, typer.Option(help="Markdown report output")] = Path("suggestions.md"),
     ai_report: Annotated[bool, typer.Option(help="Generate AI report")] = False,

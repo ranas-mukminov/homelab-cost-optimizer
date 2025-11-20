@@ -67,7 +67,7 @@ class Inventory:
         for item in data.get("nodes", []):
             if "name" not in item:
                 raise ValueError("Node missing required field 'name'")
-            
+
             profile_data = item.get("power_profile", {})
             profile = PowerProfile(
                 name=profile_data.get("name", "default"),
@@ -85,12 +85,12 @@ class Inventory:
                     metadata=item.get("metadata", {}),
                 )
             )
-        
+
         workloads = []
         for item in data.get("workloads", []):
             if "name" not in item:
                 raise ValueError("Workload missing required field 'name'")
-            
+
             workloads.append(
                 Workload(
                     name=item["name"],

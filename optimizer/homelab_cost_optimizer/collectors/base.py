@@ -17,8 +17,8 @@ class BaseCollector(ABC):
 
     @staticmethod
     def _bytes_to_gb(value: float) -> float:
-        return round(value / (1024 ** 3), 2)
+        return round(value / (1024**3), 2)
 
     @staticmethod
     def _kb_to_gb(value: float) -> float:
-        return round(value / (1024 ** 2), 2)
+        return round(value / (1024**2), 2)

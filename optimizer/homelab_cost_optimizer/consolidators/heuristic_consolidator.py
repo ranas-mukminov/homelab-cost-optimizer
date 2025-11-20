@@ -91,7 +91,9 @@ class HeuristicConsolidator:
         nodes: List[Node],
         usage: Dict[str, NodeUsage],
     ) -> Node | None:
-        for node in sorted(nodes, key=lambda n: usage[n.name].cpu / n.total_cpu if n.total_cpu else 0):
+        for node in sorted(
+            nodes, key=lambda n: usage[n.name].cpu / n.total_cpu if n.total_cpu else 0
+        ):
             if node.name == source_node.name:
                 continue
             if self._fits(workload, node, usage[node.name]):
@@ -119,4 +121,8 @@ class HeuristicConsolidator:
         usage[source_node.name].ram -= workload.memory_gb
         usage[destination.name].cpu += workload.vcpus
         usage[destination.name].ram += workload.memory_gb
-        moves.append(ConsolidationMove(workload=workload, source_node=source_node.name, target_node=destination.name))
+        moves.append(
+            ConsolidationMove(
+                workload=workload, source_node=source_node.name, target_node=destination.name
+            )
+        )

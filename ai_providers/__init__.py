@@ -22,5 +22,7 @@ except Exception:  # ImportError
 def get_provider(name: str, **kwargs) -> BaseAIProvider:
     name = name.lower()
     if name not in PROVIDERS:
-        raise ProviderNotAvailable(f"Unknown AI provider '{name}'. Available: {', '.join(PROVIDERS)}")
+        raise ProviderNotAvailable(
+            f"Unknown AI provider '{name}'. Available: {', '.join(PROVIDERS)}"
+        )
     return PROVIDERS[name](**kwargs)

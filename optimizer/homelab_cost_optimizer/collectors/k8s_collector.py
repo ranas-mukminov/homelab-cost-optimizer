@@ -59,8 +59,16 @@ class KubernetesCollector(BaseCollector):
         if not node_name:
             return None
         containers = item.get("spec", {}).get("containers", [])
-        cpu = sum(self._parse_cpu((c.get("resources", {}).get("requests", {}) or {}).get("cpu", "0")) for c in containers)
-        mem = sum(self._parse_memory((c.get("resources", {}).get("requests", {}) or {}).get("memory", "0")) for c in containers)
+        cpu = sum(
+            self._parse_cpu((c.get("resources", {}).get("requests", {}) or {}).get("cpu", "0"))
+            for c in containers
+        )
+        mem = sum(
+            self._parse_memory(
+                (c.get("resources", {}).get("requests", {}) or {}).get("memory", "0")
+            )
+            for c in containers
+        )
         return Workload(
             name=item.get("metadata", {}).get("name", "pod"),
             workload_type="pod",
@@ -84,11 +92,11 @@ class KubernetesCollector(BaseCollector):
         value = value or "0"
         suffix_map = {
             "Ki": 1024,
-            "Mi": 1024 ** 2,
-            "Gi": 1024 ** 3,
+            "Mi": 1024**2,
+            "Gi": 1024**3,
         }
         for suffix, factor in suffix_map.items():
             if value.endswith(suffix):
-                numeric = float(value[:-len(suffix)])
-                return round(numeric * factor / (1024 ** 3), 3)
+                numeric = float(value[: -len(suffix)])
+                return round(numeric * factor / (1024**3), 3)
         return float(value)
