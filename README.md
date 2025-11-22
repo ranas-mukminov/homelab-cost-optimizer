@@ -1,258 +1,644 @@
-# 🏠 Homelab / SMB Infra-as-Code Blueprints & Cost Optimizer
+# 🏠 Homelab Cost Optimizer
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-green.svg)](https://www.python.org/)
-[![CI](https://github.com/ranas-mukminov/homelab-cost-optimizer/actions/workflows/ci.yml/badge.svg)](.github/workflows/ci.yml)
-[![Security Audit](https://github.com/ranas-mukminov/homelab-cost-optimizer/workflows/Security%20Audit/badge.svg)](https://github.com/ranas-mukminov/homelab-cost-optimizer/actions/workflows/security.yml)
-[![Code Quality](https://github.com/ranas-mukminov/homelab-cost-optimizer/workflows/Code%20Quality/badge.svg)](https://github.com/ranas-mukminov/homelab-cost-optimizer/actions/workflows/code-quality.yml)
+[![CI](https://github.com/ranas-mukminov/homelab-cost-optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/ranas-mukminov/homelab-cost-optimizer/actions/workflows/ci.yml)
 
-Opinionated IaC blueprints for homelabs and small businesses, plus an AI-assisted cost optimizer for your VMs and containers.
-
-**Production-ready** | **Multi-platform** | **Cost-optimized** | **Infrastructure-as-Code**
+🇬🇧 English | 🇷🇺 [Русская версия](README.ru.md)
 
 ---
 
-## English
+## Overview
 
-### 💡 Motivation
+**Homelab Cost Optimizer** is a comprehensive infrastructure management toolkit for homelab enthusiasts and small business teams. It combines production-ready Infrastructure-as-Code (IaC) blueprints with an intelligent cost optimization engine that analyzes power consumption, resource utilization, and infrastructure expenses across multiple virtualization platforms.
 
-- 🏗️ Homelabs and SMB stacks grow organically without consistent documentation or reproducibility
-- ⚡ Power usage and infra costs quietly increase while optimization remains a manual spreadsheet exercise
-- 📚 Blog posts typically showcase a single bespoke lab, not a reusable, versioned blueprint catalog that can evolve with your hardware
+This project helps Linux system administrators, DevOps engineers, and infrastructure teams reduce operational costs, standardize deployments, and maintain efficient homelab or SMB infrastructure without manual spreadsheet tracking.
 
-### ✨ What this repository provides
+## Key Features
 
-#### 🛠️ IaC Blueprints:
+- 🏗️ **Production-Ready IaC Blueprints** — Terraform and Ansible templates for common homelab stacks (Proxmox, K3s, NAS, VPN)
+- 📊 **Multi-Platform Data Collection** — Gather metrics from Proxmox, libvirt, Docker, and Kubernetes APIs automatically
+- ⚡ **Power Consumption Estimation** — Calculate electricity costs based on configurable power profiles and local tariffs
+- 💰 **Cost Analysis Engine** — Track monthly infrastructure expenses and identify optimization opportunities
+- 🔄 **Consolidation Recommendations** — AI-powered suggestions to merge low-utilization workloads and reduce active nodes
+- 📝 **Automated Reporting** — Generate Markdown or AI-crafted summaries with actionable cost-saving recommendations
+- 🤖 **AI Integration** — Optional OpenAI integration for intelligent blueprint suggestions and narrative reports
+- 🔒 **Security-First Design** — No credential storage, API keys via environment variables, comprehensive security scanning
 
-- 🖥️ **Proxmox + OpenWrt + pfSense + NAS** baseline homelab
-- ☸️ **K3s / K3d cluster** with CI/CD workers and an observability stack
-- 🏢 **Home office stack** with VPN, SMB/NFS storage, backup, and monitoring glue
-- 🚀 **Micro-SaaS** minimal production footprint with reverse proxy, TLS, app runtime, database, and scheduled backups
+## Architecture / Components
 
-#### 💰 Cost Optimizer:
+The project consists of two main layers working together:
 
-- 📊 Collects CPU/RAM/uptime and utilization metrics from Proxmox, libvirt, Docker, and Kubernetes APIs
-- ⚡ Estimates power and monetary cost based on configurable power profiles and electricity tariffs
-- 🔄 Suggests consolidation scenarios that merge low-utilization workloads or power down underused nodes
-- 📝 Generates human-friendly Markdown or AI-crafted summaries with prioritized recommendations
-
-### 🏗️ Architecture overview
+### Infrastructure Layer (blueprints/)
 
 ```
-Terraform/Ansible/k3d blueprints --> reproducible lab + SMB stacks
-                                      |  
-                                      | collectors (Proxmox/libvirt/Docker/K8s)
-                                      v
-                                 unified models (Nodes, Workloads)
-                                      |
-             power estimator ---- cost estimator ---- heuristic consolidator
-                                      |
-                     text/markdown/AI reporters --> operators + stakeholders
+Terraform Modules ──┐
+Ansible Playbooks ──┼──> Reproducible homelab stacks
+K3d Definitions ────┘     (Proxmox, K3s, NAS, VPN, monitoring)
 ```
 
-- **Infrastructure layer**: Terraform modules define hypervisors, VLANs, and services; Ansible roles converge OS/services; k3d definitions bootstrap lightweight clusters for development mirrors
-- **Optimizer layer**: pluggable collectors normalize usage, estimators quantify watts & currency, consolidator simulates right-sizing, reporters turn that story into actionable artifacts
+- **Terraform**: Infrastructure provisioning (VMs, networks, storage)
+- **Ansible**: Configuration management (OS hardening, service deployment)
+- **K3d**: Lightweight Kubernetes for development environments
 
-### 🚀 Quick start
+### Optimizer Layer (optimizer/)
 
-**Prerequisites:** Terraform, Ansible, k3d/k3s (if needed), Python 3.10+ with `pip`
+```
+Data Collection ──> Normalization ──> Analysis ──> Recommendations
+    |                    |                |              |
+Proxmox API         Node/Workload    Power/Cost    Consolidation
+libvirt API          Models         Estimators      Scenarios
+Docker API                                              |
+Kubernetes API                                   Markdown/AI Reports
+```
 
-**1. Clone repository:**
+**Data Flow:**
+1. Collectors fetch resource metrics from infrastructure APIs
+2. Unified models normalize data across different platforms
+3. Estimators calculate power consumption and costs
+4. Consolidators simulate optimization scenarios
+5. Reporters generate actionable insights
+
+## Requirements
+
+### Operating System
+- Linux (Ubuntu 20.04+, Debian 11+, RHEL 8+, Rocky Linux 8+)
+- Any modern Linux distribution with Python 3.10+ support
+
+### Infrastructure Access
+- **For Blueprints**: Terraform 1.5+, Ansible 2.14+
+- **For Optimizer**: API access to at least one platform:
+  - Proxmox VE 7.0+ (API token required)
+  - libvirt (socket access)
+  - Docker Engine (socket access)
+  - Kubernetes cluster (kubeconfig)
+
+### System Resources
+- **CPU**: 2+ cores recommended
+- **RAM**: 2GB minimum, 4GB recommended
+- **Disk**: 500MB for application, additional space for blueprints
+- **Network**: Internet access for package installation and optional AI features
+
+### Python Dependencies
+- Python 3.10 or higher
+- pip package manager
+- Virtual environment (recommended)
+
+### Optional Components
+- **OpenAI API key** — For AI-powered reports and blueprint assistance
+- **k3d** — For local Kubernetes development (v5.4.0+)
+- **Proxmox VE** — For homelab virtualization
+
+## Quick Start (TL;DR)
+
 ```bash
-git clone https://github.com/ranas-mukminov/homelab-cost-optimizer && cd homelab-cost-optimizer
-```
+# 1. Clone repository
+git clone https://github.com/ranas-mukminov/homelab-cost-optimizer
+cd homelab-cost-optimizer
 
-**2. Choose and configure blueprint:**
-Pick a blueprint under `blueprints/terraform` and align variables (domain, VLANs, node inventory); pair with `blueprints/ansible` roles/playbooks.
-
-**3. Deploy infrastructure:**
-Run Terraform (with remote state) then Ansible to provision and configure the environment.
-
-**4. Install optimizer:**
-```bash
+# 2. Install optimizer
+python3 -m venv venv
+source venv/bin/activate
 pip install -e .
-homelab-cost-optimizer --help
+
+# 3. Configure electricity pricing
+cp config/electricity.example.yaml config/electricity.yaml
+# Edit config/electricity.yaml with your tariff
+
+# 4. Collect metrics from your infrastructure
+homelab-cost-optimizer collect \
+  --source proxmox \
+  --url https://pve.example.local:8006 \
+  --token-id user@pam!tokenname \
+  --token-secret YOUR_TOKEN_SECRET \
+  --out inventory.json
+
+# 5. Analyze costs
+homelab-cost-optimizer analyze \
+  --input inventory.json \
+  --config config/electricity.yaml \
+  --out report.md
+
+# 6. Get consolidation suggestions
+homelab-cost-optimizer suggest \
+  --scenario consolidate-low-util \
+  --input inventory.json \
+  --config config/optimizer.yaml
 ```
 
-**5. Configure electricity pricing:**
-Copy `config/electricity.example.yaml` to `config/electricity.yaml` with your price per kWh.
+**Default web access**: Cost reports are saved as Markdown files in the current directory.
 
-**6. Run collection and analysis:**
-```bash
-homelab-cost-optimizer collect --source proxmox --url https://pve.local --token **** --out inventory.json
-homelab-cost-optimizer analyze --input inventory.json --config config/electricity.yaml --out report.md
-```
+## Detailed Installation
 
-**7. Explore consolidation:**
-```bash
-homelab-cost-optimizer suggest --scenario consolidate-low-util --input data.json --config config/optimizer.yaml --ai-report
-```
-
-### 📁 Repository layout
-
-- 📂 `blueprints/` – Terraform, Ansible, k3d, and AI helper modules composing the homelab catalogs
-- 🐍 `optimizer/` – Python package with collectors, estimators, consolidators, reporters, and CLI
-- 🤖 `ai_providers/` – Pluggable AI layer (OpenAI example + deterministic mock) for reports and blueprint assistants
-- ⚙️ `config/` – Example YAML configs for electricity/cost and optimizer behavior
-- 🧪 `tests/` – Unit + integration suites covering collectors through Terraform scaffolding sanity
-- 🔧 `scripts/` – Linting, formatting, security, and performance automation helpers
-- 🔄 `.github/workflows/` – CI pipelines for lint/tests and scheduled security scans
-- 📄 `LEGAL.md`, `CONTRIBUTING.md`, `CHANGELOG.md` – governance and compliance docs
-
-### 📦 Blueprints catalog (samples)
-
-#### `proxmox-homelab`
-- Spins up Proxmox hosts, pfSense/OPNsense firewall, dedicated NAS VM/LXC, and management jump host
-- Focus on VLAN-aware networking, Ceph/ZFS storage pools, and DHCP/DNS integration
-
-#### `k3s-ci-monitoring`
-- Deploys lightweight K3s control plane + worker pool, Git server + CI runner, ArgoCD, Prometheus/Grafana, and Loki/Alertmanager wiring
-
-#### `micro-saas`
-- Templates for Traefik reverse proxy, TLS automation, app container set, PostgreSQL/Redis stateful components, backup CronJobs, and optional CDN/front-door integration
-- Each blueprint exposes centralized `variables.tf` and Ansible group_vars so you can trace every subnet, credential, and resource sizing knob
-
-### 💰 Cost optimizer
-
-#### CLI usage (Typer-based):
+### Install on Ubuntu / Debian
 
 ```bash
-# Collect metrics
-homelab-cost-optimizer collect --source proxmox --url https://pve.local --token $PVE_TOKEN --out data.json
+# Update package index
+sudo apt update
 
-# Analyze costs
-homelab-cost-optimizer analyze --input data.json --config config/electricity.yaml --out summary.md
+# Install Python 3.10+ and pip
+sudo apt install python3 python3-pip python3-venv git -y
 
-# Get consolidation suggestions
-homelab-cost-optimizer suggest --scenario consolidate-low-util --input data.json --config config/optimizer.yaml --ai-report
+# Clone repository
+git clone https://github.com/ranas-mukminov/homelab-cost-optimizer
+cd homelab-cost-optimizer
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install package in development mode
+pip install -e .
+
+# Install development tools (optional)
+pip install -e .[dev]
+
+# Verify installation
+homelab-cost-optimizer --version
 ```
 
-#### Features:
+### Install on RHEL / Rocky / AlmaLinux
 
-- **Data model**: Nodes carry type/power profiles; Workloads represent VMs, containers, or pods with assigned resources and utilization hints
-- **Estimation**: Baseline idle watts per node + scaling for CPU cores and RAM; kWh derived from uptime hours × watts / 1000; currency via configurable tariff matrix
-- **Consolidation**: Greedy bin-pack tries to fit workloads onto fewer nodes w/out exceeding CPU/RAM, reporting freed nodes, watts saved, and monthly deltas
+```bash
+# Install Python 3.10+ and dependencies
+sudo dnf install python3.10 python3.10-pip git -y
 
-### 🤖 AI integration
+# Clone repository
+git clone https://github.com/ranas-mukminov/homelab-cost-optimizer
+cd homelab-cost-optimizer
 
-- 🎯 `blueprints/ai/blueprint_ai_adapter.py` consumes inventory and desired topology, optionally asks configured AI provider for alternative layouts, variable suggestions, or textual reasoning
-- 📊 `optimizer/reporters/ai_reporter.py` converts numeric outcomes into narrative: headlines, prioritized recommendations, conservative vs aggressive scenarios, before/after comparison tables
-- 🔌 AI providers live under `ai_providers/` with an abstract base and specific implementations; API keys are injected via environment variables, never stored in repo
-- 🔒 Deterministic defaults ensure safe operation without AI credentials
+# Create virtual environment
+python3.10 -m venv venv
+source venv/bin/activate
 
-### 🧪 Testing & quality
+# Install package
+pip install -e .
 
-- ✅ `pytest` executes unit + integration suites
-- 🔍 `scripts/lint.sh` runs Ruff/Black/isort, yamllint, terraform fmt/validate, ansible-lint
-- 🔐 `scripts/security_scan.sh` runs `pip-audit` (or `safety`) and `bandit`
-- ⚡ `scripts/perf_check.sh` spins synthetic datasets (100 nodes / 1000 workloads) to guard against pathological slowdowns
+# Verify installation
+homelab-cost-optimizer --version
+```
 
-### ⚖️ Legal / responsible use
+### Install with Docker / Docker Compose
 
-- ✅ Operate only on infrastructures and APIs you own or are authorized to assess
-- 🔒 Respect Proxmox, libvirt, Docker, Kubernetes, and cloud provider terms of service; no credential scraping or bypass tooling is included
-- 📊 Power/cost estimations are approximations for planning purposes, not financial advice or billing guarantees
+```bash
+# Clone repository
+git clone https://github.com/ranas-mukminov/homelab-cost-optimizer
+cd homelab-cost-optimizer
 
-### 👨‍💻 Professional services – run-as-daemon.ru
+# Build container (example Dockerfile not included in repo)
+# Note: Run directly with Python installation for best compatibility
+```
 
-**Professional DevOps & Infrastructure services by [run-as-daemon.ru](https://run-as-daemon.ru)**
+**Note**: The project is designed to run directly on Linux systems. Container deployment is possible but not the primary use case.
 
-This project is maintained by the DevSecOps / SRE / FinOps engineer behind run-as-daemon.ru.
+### Install IaC Tools (for Blueprints)
 
-#### 💼 Services Offered:
+```bash
+# Install Terraform
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install terraform
 
-- ��️ **Infrastructure as Code**: Designing reproducible homelab or SMB infrastructure as code
-- ☸️ **Kubernetes & Orchestration**: Building K3s/Kubernetes clusters, CI/CD, and observability stacks
-- 💰 **Cost Optimization**: Optimizing power and infrastructure costs of your existing workloads
-- 📊 **Monitoring & Observability**: Setting up comprehensive monitoring solutions
-- 🎓 **Training & Consulting**: Team workshops and infrastructure consulting
+# Install Ansible
+sudo apt install ansible -y
 
-#### 📞 Contact for Consulting:
+# Install k3d (for Kubernetes blueprints)
+wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+```
 
-**Website:** [run-as-daemon.ru](https://run-as-daemon.ru)
+## Configuration
 
-*"Defense by design. Speed by default"* — Security-first architecture with performance optimization
+### Electricity Pricing Configuration
 
----
+Create `config/electricity.yaml` from the example:
 
-### 🤝 Contributing
+```yaml
+# Currency for cost calculations
+currency: EUR
 
-We welcome contributions! Please follow these guidelines:
+# Base electricity price per kilowatt-hour
+price_per_kwh: 0.22
 
-1. **Fork and branch** per feature; keep changes focused
-2. **Run quality checks:** `scripts/lint.sh`, `pytest`, and security/perf scripts before submitting PRs
-3. **Blueprint contributions** should include diagrams/docs plus Terraform + Ansible parity; describe assumptions clearly
-4. **Code style:** Follow the coding standards enforced by linters
-5. **Documentation:** Update relevant docs with your changes
+# Optional: Time-of-use pricing (peak/off-peak rates)
+periods:
+  - name: peak
+    hours: ["08:00-22:00"]
+    price_per_kwh: 0.26
+  - name: offpeak
+    hours: ["22:00-08:00"]
+    price_per_kwh: 0.18
+```
 
-#### Development Guidelines:
+**Configuration options:**
+- `currency` — Currency code for reports (EUR, USD, RUB, etc.)
+- `price_per_kwh` — Default electricity price per kWh
+- `periods` — Optional time-based pricing for peak/off-peak hours
 
-- Keep changes focused and well-documented
-- Add tests for new functionality
-- Ensure all CI checks pass
-- Follow conventional commits format
+### Optimizer Behavior Configuration
 
-### 📄 License
+Create `config/optimizer.yaml` from the example:
 
-This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
+```yaml
+# Power consumption profiles for different hardware types
+power_profiles:
+  default:
+    base_idle_watts: 65       # Idle power consumption
+    watts_per_cpu_core: 12    # Additional watts per CPU core
+    watts_per_gb_ram: 0.9     # Additional watts per GB of RAM
+  
+  low_power_node:
+    base_idle_watts: 25
+    watts_per_cpu_core: 7
+    watts_per_gb_ram: 0.4
 
----
+# Consolidation scenario parameters
+scenarios:
+  consolidate-low-util:
+    cpu_threshold: 0.25       # Consolidate if CPU < 25%
+    ram_threshold: 0.30       # Consolidate if RAM < 30%
+    max_node_utilization: 0.70  # Don't exceed 70% after consolidation
+  
+  rightsize:
+    cpu_headroom: 0.15        # Keep 15% CPU headroom
+    ram_headroom: 0.20        # Keep 20% RAM headroom
 
-## Русский (кратко)
+# Reporting options
+reporting:
+  markdown_template: default
+  enable_ai: false            # Set to true for AI-generated reports
+```
 
-### 🏠 О проекте
+### Environment Variables
 
-Каталог IaC-шаблонов для домашнего и SMB-оборудования с оптимизатором затрат на основе ИИ.
+```bash
+# Optional: OpenAI API key for AI features
+export OPENAI_API_KEY="sk-..."
 
-### ✨ Возможности:
+# Optional: Proxmox credentials (alternative to command-line args)
+export PROXMOX_URL="https://pve.example.local:8006"
+export PROXMOX_TOKEN_ID="user@pam!tokenname"
+export PROXMOX_TOKEN_SECRET="..."
+```
 
-#### 🛠️ IaC Blueprints:
-- 🖥️ Proxmox + OpenWrt/pfSense + NAS
-- ☸️ K3s/K3d кластеры с CI/CD и мониторингом
-- 🏢 Домашний офис с VPN/файловыми сервисами/бэкапами
-- 🚀 Минимальный micro-SaaS стек
+## Usage & Common Tasks
 
-#### 💰 Оптимизатор затрат:
-- 📊 Собирает метрики из Proxmox, libvirt, Docker и Kubernetes
-- ⚡ Оценивает энергопотребление по профилям мощности и тарифам
-- 🔄 Предлагает сценарии консолидации
-- 📝 Формирует отчёты (Markdown или AI)
+### Collect Metrics from Infrastructure
 
-### ⚠️ Важно:
+**From Proxmox:**
+```bash
+homelab-cost-optimizer collect \
+  --source proxmox \
+  --url https://pve.example.local:8006 \
+  --token-id user@pam!tokenname \
+  --token-secret YOUR_SECRET \
+  --out data/proxmox-inventory.json
+```
 
-- ✅ Используйте только на собственных системах
-- 🔒 Уважайте ограничения API провайдеров
-- 📊 Расчёты носят справочный характер
+**From Docker:**
+```bash
+homelab-cost-optimizer collect \
+  --source docker \
+  --socket /var/run/docker.sock \
+  --out data/docker-inventory.json
+```
 
-### 💼 Профессиональные услуги:
+**From Kubernetes:**
+```bash
+homelab-cost-optimizer collect \
+  --source kubernetes \
+  --kubeconfig ~/.kube/config \
+  --out data/k8s-inventory.json
+```
 
-**[run-as-daemon.ru](https://run-as-daemon.ru)** — помощь с:
-- 🏗️ Проектированием и внедрением Infrastructure as Code
-- ☸️ Настройкой Kubernetes кластеров и CI/CD
-- 💰 Оптимизацией затрат на инфраструктуру
-- 📊 Внедрением систем мониторинга
-- 🎓 Обучением команды DevOps практикам
+### Analyze Costs
 
----
+```bash
+# Generate cost analysis report
+homelab-cost-optimizer analyze \
+  --input data/inventory.json \
+  --config config/electricity.yaml \
+  --out reports/monthly-cost-analysis.md
 
-## 📮 Support
+# View report
+cat reports/monthly-cost-analysis.md
+```
 
-**Community Support:**
-- Open an issue on [GitHub Issues](https://github.com/ranas-mukminov/homelab-cost-optimizer/issues)
-- Check existing issues for solutions
-- Read documentation in the repository
+### Get Consolidation Suggestions
 
-**Professional Support:**
-- Production infrastructure consulting
-- Custom blueprint development
-- Cost optimization analysis
-- Training and workshops
-- 24/7 support packages
+```bash
+# Basic consolidation suggestions
+homelab-cost-optimizer suggest \
+  --scenario consolidate-low-util \
+  --input data/inventory.json \
+  --config config/optimizer.yaml
 
-**Contact:** [run-as-daemon.ru](https://run-as-daemon.ru)
+# AI-powered recommendations (requires OpenAI API key)
+export OPENAI_API_KEY="sk-..."
+homelab-cost-optimizer suggest \
+  --scenario consolidate-low-util \
+  --input data/inventory.json \
+  --config config/optimizer.yaml \
+  --ai-report
+```
+
+### Deploy Infrastructure Blueprints
+
+**Example: Proxmox Homelab Stack**
+
+```bash
+cd blueprints/terraform/proxmox-homelab
+
+# Initialize Terraform
+terraform init
+
+# Review planned changes
+terraform plan -var-file="vars/production.tfvars"
+
+# Apply infrastructure
+terraform apply -var-file="vars/production.tfvars"
+
+# Configure with Ansible
+cd ../../ansible
+ansible-playbook -i inventory/homelab playbooks/configure-proxmox.yml
+```
+
+## Update / Upgrade
+
+### Update Optimizer Tool
+
+```bash
+# Navigate to repository
+cd homelab-cost-optimizer
+
+# Pull latest changes
+git pull origin main
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Reinstall package
+pip install -e . --upgrade
+
+# Verify version
+homelab-cost-optimizer --version
+```
+
+### Update Infrastructure Blueprints
+
+```bash
+# Pull latest blueprint updates
+git pull origin main
+
+# Review changes in blueprints/
+git log --oneline blueprints/
+
+# Re-run Terraform plan to see infrastructure changes
+cd blueprints/terraform/<blueprint-name>
+terraform plan
+
+# Apply updates carefully
+terraform apply
+```
+
+## Logs, Monitoring, Troubleshooting
+
+### Application Logs
+
+The optimizer outputs logs to stdout/stderr by default:
+
+```bash
+# Enable verbose logging
+homelab-cost-optimizer collect --source proxmox ... --verbose
+
+# Redirect logs to file
+homelab-cost-optimizer analyze ... 2>&1 | tee optimizer.log
+```
+
+### Common Issues and Solutions
+
+**Problem: `ModuleNotFoundError: No module named 'homelab_cost_optimizer'`**
+
+```bash
+# Solution: Install package in virtual environment
+source venv/bin/activate
+pip install -e .
+```
+
+**Problem: Proxmox API connection refused or timeout**
+
+```bash
+# Check network connectivity
+ping pve.example.local
+
+# Verify Proxmox API is accessible
+curl -k https://pve.example.local:8006/api2/json/version
+
+# Check firewall rules allow port 8006
+sudo ufw status
+```
+
+**Problem: Permission denied accessing Docker socket**
+
+```bash
+# Add user to docker group
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Or run with sudo (not recommended)
+sudo homelab-cost-optimizer collect --source docker ...
+```
+
+**Problem: No data in cost reports**
+
+```bash
+# Verify inventory file contains data
+cat data/inventory.json | jq .
+
+# Check electricity config is loaded
+homelab-cost-optimizer analyze ... --verbose
+```
+
+**Problem: AI features not working**
+
+```bash
+# Verify OpenAI API key is set
+echo $OPENAI_API_KEY
+
+# Install AI dependencies
+pip install -e .[ai]
+
+# Check OpenAI API connectivity
+curl https://api.openai.com/v1/models -H "Authorization: Bearer $OPENAI_API_KEY"
+```
+
+## Security Notes
+
+### Access Control
+
+- 🔒 **Change default credentials** — Never use default passwords for Proxmox, Docker, or Kubernetes access
+- 🔐 **Use API tokens** — Prefer token-based authentication over username/password
+- 🚫 **Restrict API access** — Configure firewall rules to limit API endpoint access to trusted networks
+- 🔑 **Rotate credentials** — Regularly rotate API tokens and access keys
+
+### Network Security
+
+- 🛡️ **Use VPN or SSH tunnels** — Access infrastructure APIs through encrypted connections
+- 🌐 **Don't expose APIs publicly** — Keep Proxmox, libvirt, and Docker APIs on internal networks
+- 🔥 **Configure firewalls** — Use UFW, iptables, or network firewalls to restrict access
+
+### Data Privacy
+
+- 📊 **Inventory data** — Generated JSON files may contain infrastructure details; store securely
+- 🗑️ **Clean up reports** — Remove old reports containing sensitive infrastructure information
+- 🔒 **API keys** — Never commit API keys or tokens to version control
+
+### Compliance
+
+- ✅ **Operate only on authorized infrastructure** — Collect metrics only from systems you own or manage
+- 📜 **Respect API terms of service** — Follow Proxmox, Docker, and Kubernetes usage policies
+- ⚖️ **Financial estimates are informational** — Cost calculations are approximations, not billing guarantees
+
+## Project Structure
+
+```
+homelab-cost-optimizer/
+├── blueprints/              # IaC templates and automation
+│   ├── terraform/           # Infrastructure provisioning modules
+│   ├── ansible/             # Configuration management playbooks
+│   ├── k3d/                 # Kubernetes development environments
+│   └── ai/                  # AI-powered blueprint helpers
+├── optimizer/               # Python package (cost optimizer)
+│   └── homelab_cost_optimizer/
+│       ├── cli.py           # Command-line interface
+│       ├── collectors/      # Data collection from APIs
+│       ├── estimators/      # Power and cost calculations
+│       ├── consolidators/   # Optimization algorithms
+│       └── reporters/       # Report generation
+├── ai_providers/            # AI integration layer
+│   ├── base.py              # Abstract AI provider interface
+│   ├── openai_provider.py  # OpenAI implementation
+│   └── mock_provider.py    # Deterministic mock for testing
+├── config/                  # Example configurations
+│   ├── electricity.example.yaml
+│   └── optimizer.example.yaml
+├── tests/                   # Test suites
+│   ├── unit/                # Unit tests
+│   └── integration/         # Integration tests
+├── scripts/                 # Development and CI helpers
+│   ├── lint.sh              # Code quality checks
+│   ├── security_scan.sh     # Security audits
+│   └── perf_check.sh        # Performance benchmarks
+├── .github/workflows/       # CI/CD pipelines
+├── LEGAL.md                 # Legal and compliance notes
+├── CONTRIBUTING.md          # Contribution guidelines
+├── CHANGELOG.md             # Version history
+└── LICENSE                  # Apache-2.0 license
+```
+
+## Roadmap / Plans
+
+**Planned features** (contributions welcome):
+
+- 🌍 **Additional platform support** — VMware ESXi, OpenStack, LXC/LXD collectors
+- 📊 **Grafana dashboard integration** — Real-time cost monitoring
+- 🔄 **Automated consolidation** — Execute optimization recommendations automatically
+- 💾 **Historical tracking** — Database backend for cost trend analysis
+- 🌡️ **Temperature monitoring** — Correlate power consumption with thermal data
+- ☁️ **Cloud cost comparison** — Compare on-premise vs cloud provider pricing
+
+**Long-term vision:**
+
+- Complete observability stack blueprints
+- Multi-site homelab orchestration
+- Energy efficiency scoring and benchmarks
+
+## Contributing
+
+Contributions are welcome and appreciated! Follow these guidelines:
+
+### How to Contribute
+
+**1. Open an issue** — Discuss bugs, feature requests, or blueprint ideas in [GitHub Issues](https://github.com/ranas-mukminov/homelab-cost-optimizer/issues)
+
+**2. Fork and branch** — Create a feature branch from `main`:
+```bash
+git checkout -b feature/your-feature-name
+```
+
+**3. Follow code style:**
+- Python: PEP 8 compliance, type hints, 100-character line length
+- Use Black formatter: `black .`
+- Use isort for imports: `isort .`
+- Terraform: `terraform fmt`
+- Ansible: `ansible-lint`
+
+**4. Add tests** — New features require unit tests and integration tests where applicable:
+```bash
+pytest tests/
+```
+
+**5. Run quality checks:**
+```bash
+# Lint and format
+scripts/lint.sh
+
+# Security scan
+scripts/security_scan.sh
+
+# Performance check
+scripts/perf_check.sh
+```
+
+**6. Submit pull request** — Provide clear description of changes and motivation
+
+### Blueprint Contributions
+
+When contributing new IaC blueprints:
+
+- Include both Terraform and Ansible components
+- Document all variables and assumptions
+- Provide example `tfvars` and inventory files
+- Add README in blueprint directory
+- Test against fresh installations
+
+### Code Review Process
+
+- All PRs require passing CI checks
+- Maintainers review within 3-5 business days
+- Address review feedback before merge
+
+## License
+
+This project is licensed under the **Apache License 2.0** — see the [LICENSE](LICENSE) file for details.
+
+**Summary:**
+- ✅ Free to use, modify, and distribute
+- ✅ Can be used commercially
+- ✅ Patent grant included
+- ⚠️ Must include license and copyright notices
+- ⚠️ Changes must be documented
+
+## Author and Commercial Support
+
+**Author:** [Ranas Mukminov](https://github.com/ranas-mukminov)
+
+**Professional DevOps & Infrastructure Services:** [run-as-daemon.ru](https://run-as-daemon.ru)
+
+### Commercial Support Services
+
+For production deployments, custom solutions, and professional assistance:
+
+- 🏗️ **Infrastructure Design & Implementation** — Custom homelab and SMB infrastructure architecture
+- ☸️ **Kubernetes & Orchestration** — K3s/K8s cluster setup, CI/CD pipelines, observability stacks
+- 💰 **Cost Optimization Consulting** — Deep analysis and optimization of your infrastructure expenses
+- 📊 **Monitoring & Observability** — Prometheus, Grafana, Loki implementation and tuning
+- 🎓 **Training & Workshops** — Team training on IaC, DevOps practices, and cost management
+- 🔒 **Security Audits** — Infrastructure security reviews and hardening
+
+**Contact:** [run-as-daemon.ru](https://run-as-daemon.ru) or via [GitHub profile](https://github.com/ranas-mukminov)
 
 ---
 
 **Made with ❤️ for homelab enthusiasts and SMB teams**
 
-**Professional DevOps & Infrastructure Support:** [run-as-daemon.ru](https://run-as-daemon.ru)
+**Professional Support:** [run-as-daemon.ru](https://run-as-daemon.ru)
